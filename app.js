@@ -8,9 +8,11 @@ app.use(express.json());
 
 const authRoutes = require('./routes/authRoutes');
 const coordinatorRoutes = require('./routes/coordinatorRoutes');
+const respondentRoutes = require('./routes/respondentRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/coordinator', coordinatorRoutes);
+app.use('/api/respondent', respondentRoutes);
 
 db.query('SELECT 1')
   .then(() => console.log('Database connected!'))

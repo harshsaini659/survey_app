@@ -6,7 +6,6 @@ exports.auth = (req, res, next) => {
 
   try {
     const token = authHeader.split(' ')[1];
-    console.log('Token:', token); // Debugging line to check the token
     const decoded = verifyToken(token);
     req.user = decoded;
     next();
