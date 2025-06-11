@@ -1,8 +1,10 @@
-const express = require('express')
-const db = require('./config/db')
-require('dotenv').config()
-const app = express()
-const PORT = process.env.PORT || 5000
+const express = require('express');
+require('dotenv').config();
+const createDatabase = require('./config/createDatabase');
+const { sequelize } = require('./models/index');
+
+const app = express();
+const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 
@@ -14,14 +16,23 @@ app.use('/api/auth', authRoutes);
 app.use('/api/coordinator', coordinatorRoutes);
 app.use('/api/respondent', respondentRoutes);
 
-db.query('SELECT 1')
-  .then(() => console.log('Database connected!'))
-  .catch(err => console.error('DB connection error:', err));
-
-app.get('/',(req,res)=>{
-    res.send('Survey API running...')
-})
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.get('/', (req, res) => {
+  res.send('Survey API running...');
 });
+
+async function startServer() {
+  try {
+    await createDatabase();
+
+    await sequelize.sync();
+
+    console.log('Database connected and synced!');
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error('Startup error:', err);
+  }
+}
+
+startServer();
