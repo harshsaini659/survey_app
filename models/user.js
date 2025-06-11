@@ -15,7 +15,15 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     gender: DataTypes.STRING,
     age: DataTypes.INTEGER,
-    role: DataTypes.ENUM('coordinator', 'respondent')
+    role: {
+      type: DataTypes.ENUM('coordinator', 'respondent'),
+      validate: {
+        isIn: {
+          args: [['coordinator', 'respondent']],
+          msg: 'Role must be either coordinator or respondent'
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'User',
