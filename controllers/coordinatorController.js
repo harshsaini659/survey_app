@@ -24,3 +24,15 @@ exports.createSurvey = async (req, res) => {
     res.status(500).json({ msg: 'Error creating survey', error: err.message });
   }
 };
+
+exports.getMySurveys = async (req, res) => {
+  try {
+    const surveys = await Survey.findAll({
+      where: { coordinatorId: req.user.id },
+      include: [Question]
+    });
+    res.status(200).json(surveys);
+  } catch (err) {
+    res.status(500).json({ msg: 'Error fetching surveys' });
+  }
+};
