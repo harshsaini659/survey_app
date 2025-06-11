@@ -1,4 +1,4 @@
-const { Survey, Question } = require('../models');
+const { Survey, Question, Response, User } = require('../models');
 
 exports.createSurvey = async (req, res) => {
   try {
@@ -50,5 +50,20 @@ exports.editSurvey = async (req, res) => {
     res.status(200).json({ msg: 'Survey updated' });
   } catch (err) {
     res.status(500).json({ msg: 'Error updating survey' });
+  }
+};
+
+exports.getSubmissions = async (req, res) => {
+  try {
+    const { surveyId } = req.params;
+
+    const responses = await Response.findAll({
+      where: { surveyId },
+      include: [{ model: User, attributes: ['name', 'age', 'gender'] }]
+    });
+
+    res.status(200).json(responses);
+  } catch (err) {
+    res.status(500).json({ msg: 'Error fetching submissions' });
   }
 };
