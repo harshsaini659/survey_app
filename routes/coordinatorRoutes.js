@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const {createSurvey} = require('../controllers/coordinatorController');
+const {createSurvey, getMySurveys} = require('../controllers/coordinatorController');
 
 const { auth, requireRole } = require('../middlewares/authMiddleware');
 
