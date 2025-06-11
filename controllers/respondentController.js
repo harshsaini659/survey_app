@@ -30,3 +30,23 @@ exports.getEligibleSurveys = async (req, res) => {
     res.status(500).json({ msg: 'Error fetching eligible surveys' });
   }
 };
+
+exports.submitSurvey = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { surveyId, answers } = req.body;
+
+    const exists = await Response.findOne({ where: { userId, surveyId } });
+    if (exists) return res.status(400).json({ msg: 'You have already submitted this survey' });
+
+    await Response.create({
+      userId,
+      surveyId,
+      answers: JSON.stringify(answers)
+    });
+
+    res.status(201).json({ msg: 'Response submitted successfully' });
+  } catch (err) {
+    res.status(500).json({ msg: 'Error submitting response' });
+  }
+};
